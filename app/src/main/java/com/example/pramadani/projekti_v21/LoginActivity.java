@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,9 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import javax.security.auth.login.LoginException;
-
-public class LogIn extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     EditText etEmail,etPassword;
     Button btnLogin,register;
@@ -29,7 +26,6 @@ public class LogIn extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-
         etEmail=findViewById(R.id.email);
         etPassword=findViewById(R.id.password);
         btnLogin=findViewById(R.id.btn_login);
@@ -43,9 +39,9 @@ public class LogIn extends AppCompatActivity {
                 String email= etEmail.getText().toString().trim();
                 String password=etPassword.getText().toString().trim();
                 if(email.isEmpty()){
-                    Toast.makeText(LogIn.this, "You must provide email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "You must provide email", Toast.LENGTH_SHORT).show();
                 }else if(password.isEmpty()){
-                    Toast.makeText(LogIn.this, "You must provide password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "You must provide password", Toast.LENGTH_SHORT).show();
                 }else{
                     logInUsers(email, password);
                 }
@@ -54,7 +50,7 @@ public class LogIn extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent register=new Intent(LogIn.this,RegisterActivity.class);
+                Intent register=new Intent(LoginActivity.this,RegisterActivity.class);
                 startActivity(register);
             }
         });
@@ -68,9 +64,9 @@ public class LogIn extends AppCompatActivity {
 
                 if(!task.isSuccessful()){
                     //error loging
-                    Toast.makeText(LogIn.this, "Error " + task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Error " + task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }else{
-                    Intent maini=new Intent(LogIn.this,MainActivity.class);
+                    Intent maini=new Intent(LoginActivity.this,MainActivity.class);
                     startActivity(maini);
                 }
             }

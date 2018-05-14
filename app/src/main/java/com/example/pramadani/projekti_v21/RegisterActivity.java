@@ -79,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 etPassword.setText("");
                                 etEmail.setText("");
                                 etRetypePassword.setText("");
-                                startActivity(new Intent(RegisterActivity.this,LogIn.class));
+                                startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
                                 createUserInDb(newUser.getUid(),newUser.getDisplayName(),newUser.getEmail());
                             }
                             else{
