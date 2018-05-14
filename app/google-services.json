@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "571101764558",
+    "firebase_url": "https://projekti-v21.firebaseio.com",
+    "project_id": "projekti-v21",
+    "storage_bucket": "projekti-v21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:571101764558:android:5fe5693b03911525",
+        "android_client_info": {
+          "package_name": "com.example.pramadani.projekti_v21"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "571101764558-qckub1n72u25djp7e908am6kc3o2f093.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pramadani.projekti_v21",
+            "certificate_hash": "96eeaf24af8783ffed157c0e60877e16dddca9bc"
+          }
+        },
+        {
+          "client_id": "571101764558-lejdqfb43beq9b7t3iiefvb82gh3vt7q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-05bt08y31Qz8KA1xobvRGbv2gZmf75s"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "571101764558-lejdqfb43beq9b7t3iiefvb82gh3vt7q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
