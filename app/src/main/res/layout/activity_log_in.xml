@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    >
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -19,16 +20,22 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="30dp"
             android:src="@mipmap/ic_launcher" />
+
+        <ProgressBar
+            android:id="@+id/indeterminateBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            />
 
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Hint Email"
-            android:inputType="text"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white" />
 
@@ -37,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Hint Password"
+            android:hint="Password"
             android:inputType="textPassword"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white" />
@@ -50,7 +57,8 @@
             android:layout_marginTop="20dip"
             android:background="@color/colorAccent"
             android:text="Login"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black" >
+        </Button>
 
         <Button
             android:id="@+id/btn_reset_password"
