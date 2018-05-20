@@ -1,17 +1,17 @@
 package com.example.pramadani.projekti_v21;
 
 public class User {
-    String uid, name, email, password;
+    private String uid, name, faculty, username, email;
 
     User() {
 
     }
 
-    public User(String uid, String name, String email, String password) {
-        this.uid = uid;
+    public User(String name, String faculty, String username, String email) {
         this.name = name;
+        this.faculty = faculty;
+        this.username = username;
         this.email = email;
-        this.password = password;
     }
 
     public User(String uid, String name, String email) {
@@ -28,27 +28,35 @@ public class User {
         this.uid = uid;
     }
 
-    public String getFirstname() {
+    public String getName() {
         return name;
     }
 
-    public void setFirstname(String firstname) {
-        this.name = firstname;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(String faculty) {
+        this.faculty = faculty;
     }
 
     public String getUsername() {
-        return email;
+        return username;
     }
 
     public void setUsername(String username) {
-        this.email = username;
+        this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

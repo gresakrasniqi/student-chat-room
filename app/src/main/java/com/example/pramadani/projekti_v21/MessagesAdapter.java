@@ -40,7 +40,7 @@ public class MessagesAdapter extends BaseAdapter {
         TextView time=message.findViewById(R.id.message_time);
         TextView text=message.findViewById(R.id.message_text);
 
-        user.setText(mTextList.get(position).getUser().getFirstname() );
+        user.setText(mTextList.get(position).getUser().getUsername() );
         text.setText(mTextList.get(position).getMessage());
         time.setText(mTextList.get(position).getTime());
 

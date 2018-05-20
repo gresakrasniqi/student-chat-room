@@ -15,6 +15,15 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/username"
+            android:textSize="27dp"
+            android:paddingBottom="16dp"
+            android:textColor="@color/colorAccent" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +34,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/etRegisterName"
+            android:id="@+id/etEditName"
             android:imeOptions="actionNext"
             android:inputType="text"/>
         <TextView
@@ -38,21 +47,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/etRegisterFaculty"
-            android:imeOptions="actionNext"
-            android:inputType="text"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:textSize="17dp"
-            android:textColor="@android:color/white" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/etRegisterUsername"
+            android:id="@+id/etEditFaculty"
             android:imeOptions="actionNext"
             android:inputType="text"/>
 
@@ -66,7 +61,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/etRegisterEmail"
+            android:id="@+id/etEditEmail"
             android:imeOptions="actionNext"
             android:inputType="text"/>
 
@@ -80,7 +75,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/etRegisterPassword"
+            android:id="@+id/etEditPassword"
             android:inputType="textPassword"
             android:imeOptions="actionDone"/>
         <TextView
@@ -93,7 +88,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/etRegisterRetypePassword"
+            android:id="@+id/etRetypeEditPassword"
             android:inputType="textPassword"
             android:imeOptions="actionDone"/>
         <TextView
@@ -102,15 +97,31 @@
             android:textAlignment="center"
             android:textColor="@android:color/holo_red_dark"
             android:id="@+id/tvInfo"/>
-        
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Register"
-            android:background="@color/colorAccent"
-            android:textAllCaps="false"
-            android:layout_gravity="center"
-            android:id="@+id/btnRegister"/>
+
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:background="@color/colorAccent"
+                android:textAllCaps="false"
+                android:layout_gravity="center"
+                android:id="@+id/btnCancel"
+                />
+            <Space
+                android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:background="@color/colorAccent"
+                android:textAllCaps="false"
+                android:layout_gravity="center"
+                android:id="@+id/btnUpdate"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
