@@ -107,7 +107,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void goToMainActivity(){
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, MainSwipeActivity.class));
         finish();
     }
 }

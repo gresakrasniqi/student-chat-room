@@ -65,39 +65,6 @@
             android:imeOptions="actionNext"
             android:inputType="text"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Password"
-            android:textSize="17dp"
-            android:textColor="@android:color/white"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/etEditPassword"
-            android:inputType="textPassword"
-            android:imeOptions="actionDone"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Retype your Password"
-            android:textSize="17dp"
-            android:textColor="@android:color/white"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/etRetypeEditPassword"
-            android:inputType="textPassword"
-            android:imeOptions="actionDone"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textColor="@android:color/holo_red_dark"
-            android:id="@+id/tvInfo"/>
-
         <LinearLayout
             android:layout_width="250dp"
             android:layout_height="wrap_content">

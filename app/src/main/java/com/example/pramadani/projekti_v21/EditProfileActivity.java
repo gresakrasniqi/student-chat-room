@@ -1,9 +1,12 @@
 package com.example.pramadani.projekti_v21;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,9 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends Fragment {
 
-    private EditText etEditName, etEditFaculty, etEditEmail, etEditPassword, etRetypeEditPassword;
+    private EditText etEditName, etEditFaculty, etEditEmail;
     private TextView username;
     private Button btnUpdate;
     private Button btnCancel;
@@ -29,34 +32,82 @@ public class EditProfileActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
+    }
 
-        username = findViewById(R.id.username);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment.
+        return inflater.inflate(R.layout.activity_edit_profile, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        username = view.findViewById(R.id.username);
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         username.setText(currentUser.getDisplayName());
 
-    }
+        etEditName = view.findViewById(R.id.etEditName);
+        etEditFaculty = view.findViewById(R.id.etEditFaculty);
+        etEditEmail = view.findViewById(R.id.etEditEmail);
+        btnUpdate = view.findViewById(R.id.btnUpdate);
+        btnCancel = view.findViewById(R.id.btnCancel);
 
-    private void updateUserInDb(String userId, User user) {
+        final String userID = currentUser.getUid();
+        final User user = new User();
+
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-        databaseReference.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseReference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    //success adding user to db as well
-                    //go to users chat list
-                    goToMainActivity();
-                } else {
-                    Toast.makeText(EditProfileActivity.this, "Error " + task.getException(), Toast.LENGTH_SHORT).show();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                user.setName(dataSnapshot.child("name").getValue(String.class));
+                user.setFaculty(dataSnapshot.child("faculty").getValue(String.class));
+                user.setEmail(dataSnapshot.child("email").getValue(String.class));
+                etEditName.setText(user.getName());
+                etEditEmail.setText(user.getEmail());
+                etEditFaculty.setText(user.getFaculty());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //show error
+            }
+        });
+
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!etEditName.getText().toString().equals(user.getName())){
+                    user.setName(etEditName.getText().toString());
                 }
+                if(!etEditFaculty.getText().toString().equals(user.getFaculty())){
+                    user.setFaculty(etEditFaculty.getText().toString());
+                }
+                if(!etEditEmail.getText().toString().equals(user.getName())){
+                    user.setEmail(etEditEmail.getText().toString());
+                }
+                databaseReference.child(userID).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            //success adding user to db as well
+                            //go to users chat list
+                            Toast.makeText(getContext(),"sucess", Toast.LENGTH_LONG);
+                        } else {
+                            Toast.makeText(getContext(), "Error " + task.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
     }
-    private void goToMainActivity(){
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
-    }
+//    private void goToMainActivity(){
+//        startActivity(new Intent(this, MainActivity.class));
+//        finish();
+//    }
 }

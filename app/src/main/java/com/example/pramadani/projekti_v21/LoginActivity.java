@@ -18,8 +18,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText etEmail,etPassword;
-    private Button btnLogin,register;
+    private EditText etEmail, etPassword;
+    private Button btnLogin, register;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     static String name;
@@ -28,24 +28,24 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-        etEmail=findViewById(R.id.email);
-        etPassword=findViewById(R.id.password);
-        btnLogin=findViewById(R.id.btn_login);
-        register=findViewById(R.id.btn_signup);
-        progressBar=findViewById(R.id.indeterminateBar);
+        etEmail = findViewById(R.id.email);
+        etPassword = findViewById(R.id.password);
+        btnLogin = findViewById(R.id.btn_login);
+        register = findViewById(R.id.btn_signup);
+        progressBar = findViewById(R.id.indeterminateBar);
 
         mAuth = FirebaseAuth.getInstance();
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email= etEmail.getText().toString().trim();
-                String password=etPassword.getText().toString().trim();
-                if(email.isEmpty()){
+                String email = etEmail.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+                if (email.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "You must provide email", Toast.LENGTH_SHORT).show();
-                }else if(password.isEmpty()){
+                } else if (password.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "You must provide password", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     // Show the progress bar and try to login
                     progressBar.setVisibility(View.VISIBLE);
                     logInUsers(email, password);
@@ -55,7 +55,8 @@ public class LoginActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent register=new Intent(LoginActivity.this,RegisterActivity.class);
+                // Show the RegisterActivity.
+                Intent register = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(register);
             }
         });
@@ -66,19 +67,19 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.INVISIBLE);
-                if(!task.isSuccessful()){
-                    //error loging
-                    Toast.makeText(LoginActivity.this, "Error " + task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                if (task.isSuccessful()) {
+                    // Login was successful, show the MainSwipeActivity.
+                    Intent main = new Intent(LoginActivity.this, MainSwipeActivity.class);
+                    startActivity(main);
                 } else {
-                    Intent editprofile =new Intent(LoginActivity.this, EditProfileActivity.class);
-                    startActivity(editprofile);
-//                    Intent maini=new Intent(LoginActivity.this,MainActivity.class);
-//                    startActivity(maini);
+                    // Error logging in.
+                    Toast.makeText(LoginActivity.this, "Error " + task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-    //Disable click events if the progress bar is visible
+
+    // Disable click events if the progress bar is visible
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (progressBar.getVisibility() != View.VISIBLE) {
