@@ -27,6 +27,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            startActivity(new Intent(LoginActivity.this, MainSwipeActivity.class));
+            finish();
+        }
+
         setContentView(R.layout.activity_log_in);
         etEmail = findViewById(R.id.email);
         etPassword = findViewById(R.id.password);
@@ -71,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                     // Login was successful, show the MainSwipeActivity.
                     Intent main = new Intent(LoginActivity.this, MainSwipeActivity.class);
                     startActivity(main);
+                    finish();
                 } else {
                     // Error logging in.
                     Toast.makeText(LoginActivity.this, "Error " + task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();

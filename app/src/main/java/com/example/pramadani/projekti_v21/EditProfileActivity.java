@@ -2,11 +2,10 @@ package com.example.pramadani.projekti_v21;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,7 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class EditProfileActivity extends Fragment {
+public class EditProfileActivity extends AppCompatActivity {
 
     private EditText etEditName, etEditFaculty, etEditEmail;
     private TextView username;
@@ -30,33 +29,30 @@ public class EditProfileActivity extends Fragment {
     private Button btnCancel;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
+    Toolbar toolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setContentView(R.layout.activity_edit_profile);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment.
-        return inflater.inflate(R.layout.activity_edit_profile, container, false);
-    }
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle("Edit profile");
 
-        username = view.findViewById(R.id.username);
+        username = findViewById(R.id.username);
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         username.setText(currentUser.getDisplayName());
 
-        etEditName = view.findViewById(R.id.etEditName);
-        etEditFaculty = view.findViewById(R.id.etEditFaculty);
-        etEditEmail = view.findViewById(R.id.etEditEmail);
-        btnUpdate = view.findViewById(R.id.btnUpdate);
-        btnCancel = view.findViewById(R.id.btnCancel);
+        etEditName = findViewById(R.id.etEditName);
+        etEditFaculty = findViewById(R.id.etEditFaculty);
+        etEditEmail = findViewById(R.id.etEditEmail);
+        btnUpdate = findViewById(R.id.btnUpdate);
+        btnCancel = findViewById(R.id.btnCancel);
 
         final String userID = currentUser.getUid();
         final User user = new User();
@@ -97,17 +93,31 @@ public class EditProfileActivity extends Fragment {
                         if (task.isSuccessful()) {
                             //success adding user to db as well
                             //go to users chat list
-                            Toast.makeText(getContext(),"sucess", Toast.LENGTH_LONG);
+                            Toast.makeText(EditProfileActivity.this,"Success", Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(getContext(), "Error " + task.getException(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditProfileActivity.this, "Error " + task.getException(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
         });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
-//    private void goToMainActivity(){
-//        startActivity(new Intent(this, MainActivity.class));
-//        finish();
-//    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

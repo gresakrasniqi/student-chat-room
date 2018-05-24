@@ -1,22 +1,12 @@
 package com.example.pramadani.projekti_v21;
 
-
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.TextView;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +27,6 @@ public class MainSwipeActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         */
-
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
@@ -49,14 +38,16 @@ public class MainSwipeActivity extends AppCompatActivity {
     }
 
     private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(R.drawable.common_google_signin_btn_icon_dark);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_send);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_action_chat);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_action_search);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_action_settings);
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new MainActivity(), "");
-        adapter.addFragment(new EditProfileActivity(), "");
+        adapter.addFragment(new SearchActivity(), "");
+        adapter.addFragment(new SettingsActivity(), "");
         viewPager.setAdapter(adapter);
     }
 
