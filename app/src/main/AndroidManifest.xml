@@ -19,6 +19,10 @@
         </activity>
         <activity android:name=".MainSwipeActivity" />
         <activity android:name=".EditProfileActivity" />
+        <activity android:name=".Message_activity">
+        </activity>
     </application>
 
 </manifest>
+
+

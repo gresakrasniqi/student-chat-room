@@ -26,7 +26,7 @@
         >
 
         <EditText
-            android:id="@+id/input"
+            android:id="@+id/etMessage"
             android:layout_width="0dp"
             android:layout_height="35dp"
             android:layout_weight="3.5"
