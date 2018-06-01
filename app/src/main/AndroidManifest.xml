@@ -19,10 +19,10 @@
         </activity>
         <activity android:name=".MainSwipeActivity" />
         <activity android:name=".EditProfileActivity" />
-        <activity android:name=".Message_activity">
-        </activity>
+        <activity android:name=".CreateNewChatActivity" />
+        <activity android:name=".AboutUsActivity" />
+        <activity android:name=".JoinChatActivity" />
+        <activity android:name=".Message_activity"/>
     </application>
 
 </manifest>
-
-

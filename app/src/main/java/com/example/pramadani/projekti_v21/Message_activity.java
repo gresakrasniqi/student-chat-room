@@ -2,6 +2,7 @@ package com.example.pramadani.projekti_v21;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +30,7 @@ public class Message_activity extends AppCompatActivity {
     private DatabaseReference databaseUser;
     private String senderId,chatId;
     private boolean showTime=true;
+    Toolbar toolbar;
 
     ListView listViewMessage;
 
@@ -38,6 +40,11 @@ public class Message_activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages_activity);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         ibSend=(ImageButton) findViewById(R.id.ib_Send);
 
