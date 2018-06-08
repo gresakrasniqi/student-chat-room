@@ -73,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.INVISIBLE);
                 if (task.isSuccessful()) {
-                    // Login was successful, show the MainSwipeActivity.
                     Intent main = new Intent(LoginActivity.this, MainSwipeActivity.class);
                     startActivity(main);
                     finish();

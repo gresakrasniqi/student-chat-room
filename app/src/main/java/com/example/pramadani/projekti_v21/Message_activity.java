@@ -29,8 +29,17 @@ public class Message_activity extends AppCompatActivity {
     private DatabaseReference databaseMessage;
     private DatabaseReference databaseUser;
     private String senderId,chatId;
-    private boolean showTime=true;
-    Toolbar toolbar;
+    private boolean showSentTime=true;
+    private boolean showReceivedTime=true;
+
+
+    private TextView sentTimeShow;
+    private TextView sent_user;
+    private TextView receivedTimeShow;
+
+
+
+
 
     ListView listViewMessage;
 
@@ -41,12 +50,7 @@ public class Message_activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages_activity);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        ibSend=(ImageButton) findViewById(R.id.ib_Send);
+        ibSend=findViewById(R.id.ib_Send);
 
         etMessage=findViewById(R.id.etMessage);
 
@@ -56,7 +60,7 @@ public class Message_activity extends AppCompatActivity {
 
                     chatId="awokdekokeeko12345";
 
-         listViewMessage=(ListView) findViewById(R.id.lvMessage);
+         listViewMessage= findViewById(R.id.lvMessage);
 
          chatMessageList=new ArrayList<>();
 
@@ -71,14 +75,29 @@ public class Message_activity extends AppCompatActivity {
         listViewMessage.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView timeShow = view.findViewById(R.id.message_time);
-                if(showTime){
-                    timeShow.setVisibility(View.VISIBLE);
-                    showTime=false;
+                receivedTimeShow = view.findViewById(R.id.received_time);
+                sentTimeShow = view.findViewById(R.id.sent_time);
+                sent_user=view.findViewById(R.id.sent_user);
+                if(sent_user!=null){
+
+                if(showSentTime){
+                    sentTimeShow.setVisibility(View.VISIBLE);
+                    showSentTime=false;
                 }
                 else {
-                    timeShow.setVisibility(View.GONE);
-                    showTime=true;
+                    sentTimeShow.setVisibility(View.GONE);
+                    showSentTime=true;
+                }
+                }
+                else{
+                    if(showReceivedTime){
+                        receivedTimeShow.setVisibility(View.VISIBLE);
+                        showReceivedTime=false;
+                    }
+                    else {
+                        receivedTimeShow.setVisibility(View.GONE);
+                        showReceivedTime=true;
+                    }
                 }
             }
         });

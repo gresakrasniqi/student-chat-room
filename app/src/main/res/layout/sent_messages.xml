@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_margin="5dp"
+    android:id="@+id/rl"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/sent_user"
+        android:layout_marginRight="5dp"
+        android:textSize="15sp"
+        android:textStyle="normal|bold"
+        android:textColor="@android:color/holo_blue_dark"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="@+id/sent_user"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/sent_time"
+        android:textSize="11dp"
+        android:visibility="gone"
+        android:textStyle="normal"
+        android:text="test"
+        android:textColor="@android:color/holo_blue_light"
+        />
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:id="@+id/sent_text"
+        android:layout_below="@+id/sent_user"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="10dp"
+        />
+
+
+</RelativeLayout>
