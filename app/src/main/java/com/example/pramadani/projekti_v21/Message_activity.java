@@ -4,11 +4,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +31,6 @@ public class Message_activity extends AppCompatActivity {
     private ImageButton ibSend;
     private EditText etMessage;
     private DatabaseReference databaseMessage;
-    private DatabaseReference databaseUser;
     private String senderId,chatId;
     private boolean showSentTime=true;
     private boolean showReceivedTime=true;
@@ -36,10 +39,6 @@ public class Message_activity extends AppCompatActivity {
     private TextView sentTimeShow;
     private TextView sent_user;
     private TextView receivedTimeShow;
-
-
-
-
 
     ListView listViewMessage;
 
@@ -55,15 +54,19 @@ public class Message_activity extends AppCompatActivity {
         etMessage=findViewById(R.id.etMessage);
 
         databaseMessage= FirebaseDatabase.getInstance().getReference("Messages");
-        databaseUser= FirebaseDatabase.getInstance().getReference("Users");
 
 
-                    chatId="awokdekokeeko12345";
+                    chatId="awokdekokeeko123451111";
 
          listViewMessage= findViewById(R.id.lvMessage);
 
          chatMessageList=new ArrayList<>();
 
+        etMessage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+            }
+        });
 
         ibSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,12 +111,14 @@ public class Message_activity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+
         databaseMessage.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 chatMessageList.clear();
                 for(DataSnapshot messageSnapshot :dataSnapshot.getChildren()){
                     ChatMessage chatMessage=messageSnapshot.getValue(ChatMessage.class);
+                    if(chatMessage.getChatID().equals(chatId))
                     chatMessageList.add(chatMessage);
 
                 }
@@ -130,7 +135,7 @@ public class Message_activity extends AppCompatActivity {
     }
 
     private void addMessage() {
-        String message =etMessage.getText().toString();
+        String message =etMessage.getText().toString().trim();
         senderId = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         if(!message.isEmpty()){
             String id = databaseMessage.push().getKey();
@@ -141,8 +146,14 @@ public class Message_activity extends AppCompatActivity {
 
             etMessage.setText("");
 
-            Toast.makeText(this,"Message Added",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this,"Message Added",Toast.LENGTH_SHORT).show();
         }
 
+    }
+    public void hideSoftKeyboard() {
+        if(getCurrentFocus()!=null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
     }
 }
