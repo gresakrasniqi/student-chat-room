@@ -136,7 +136,7 @@ public class Message_activity extends AppCompatActivity {
 
     private void addMessage() {
         String message =etMessage.getText().toString().trim();
-        senderId = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        senderId = FirebaseAuth.getInstance().getCurrentUser().getDisplayName()+"test";
         if(!message.isEmpty()){
             String id = databaseMessage.push().getKey();
 
