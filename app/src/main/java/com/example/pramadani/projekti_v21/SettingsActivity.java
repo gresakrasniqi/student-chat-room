@@ -51,13 +51,13 @@ public class SettingsActivity extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
-                    case 0:
+                    case 1:
                         getActivity().startActivity(new Intent(getContext(), EditProfileActivity.class));
                         break;
-                    case 1:
+                    case 2:
                         getActivity().startActivity(new Intent(getContext(), AboutUsActivity.class));
                         break;
-                    case 2:
+                    case 3:
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
                         alertDialog.setCancelable(true);
                         alertDialog.setMessage("Are you sure you want to log out?");

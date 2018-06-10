@@ -2,6 +2,7 @@ package com.example.pramadani.projekti_v21;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class ChatRoom {
 
@@ -11,13 +12,13 @@ public class ChatRoom {
     private String created;
     private String creator;
     private String faculty;
-    private ArrayList<String> users;
+    private HashMap<String, String> users;
 
     public ChatRoom() {
 
     }
 
-    public ChatRoom(String chatName, String className, String created, String creator, String faculty, ArrayList<String> users) {
+    public ChatRoom(String chatName, String className, String created, String creator, String faculty, HashMap<String, String> users) {
         this.chatName = chatName;
         this.className = className;
         this.created = created;
@@ -74,11 +75,11 @@ public class ChatRoom {
         this.faculty = faculty;
     }
 
-    public ArrayList<String> getUsers() {
+    public HashMap<String, String> getUsers() {
         return users;
     }
 
-    public void setUsers(ArrayList<String> users) {
+    public void setUsers(HashMap<String, String> users) {
         this.users = users;
     }
 }

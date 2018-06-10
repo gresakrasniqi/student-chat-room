@@ -16,12 +16,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -36,18 +40,46 @@ public class MainActivity extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View v = inflater.inflate(R.layout.activity_main, container, false);
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         ListView lvChatRoom = (ListView) v.findViewById(R.id.chats_list);
 
-        ArrayList<String> alChatRooms = new ArrayList<String>();
-        alChatRooms.add("Inxhinieri Softuerike");
-        alChatRooms.add("Elektonike");
-        alChatRooms.add("Baza e te dhenave");
-        alChatRooms.add("Mikrokontrollere dhe Mikroprocesore");
+        final ArrayList<String> alChatRooms = new ArrayList<String>();
 
-        ArrayAdapter<String> allItemsAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(),
-               R.layout.list_view_row, alChatRooms);
+        final ArrayAdapter<String> allItemsAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(),
+                R.layout.list_view_row, alChatRooms);
         lvChatRoom.setAdapter(allItemsAdapter);
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot chat: dataSnapshot.getChildren()) {
+                    if (chat.child("users").child(uid).exists()){
+                        Toast.makeText(getContext(), "YES", Toast.LENGTH_LONG).show();
+                        alChatRooms.add(chat.child("chatName").getValue(String.class));
+                    }
+                }
+                allItemsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+//        databaseReference.child("-LEe3KCyYcwNsS89c7Do").addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                alChatRooms.add(dataSnapshot.child("chatName").getValue(String.class));
+//                allItemsAdapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                //show error
+//            }
+//        });
 
         lvChatRoom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -95,7 +127,10 @@ public class MainActivity extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                 alertDialog.setTitle("Enter chat ID");
+
+                final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 final String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
                 //alertDialog.setMessage("");
                 final EditText input;
                 input = new EditText(getContext());
@@ -106,9 +141,16 @@ public class MainActivity extends Fragment {
                         String joinChatID = input.getText().toString();
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats")
                                 .child(joinChatID).child("users");
-                        String id = databaseReference.push().getKey();
-                        databaseReference.child(id).setValue(username);
-
+                        databaseReference.child(uid).setValue(username, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if (databaseError == null) {
+                                    Toast.makeText(getContext(), "You sucessfuly joined the chat", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getContext(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
                     }
                 });
                 alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -10,12 +10,16 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class CreateNewChatActivity extends AppCompatActivity {
 
@@ -35,7 +39,9 @@ public class CreateNewChatActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("Create Chat");
 
+        final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
         etchatName = findViewById(R.id.etChatName);
         etchatFaculty = findViewById(R.id.etChatFaculty);
         etchatClass = findViewById(R.id.etChatClass);
@@ -51,14 +57,22 @@ public class CreateNewChatActivity extends AppCompatActivity {
                 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                 Date currentDate = new Date();
                 String formattedDate = formatter.format(currentDate);
-                ArrayList<String> users = new ArrayList<>();
-                users.add("gresa");
+                HashMap<String, String>  users = new HashMap<String, String>();
+                users.put(uid, username);
                 ChatRoom newChatRoom = new ChatRoom(etchatName.getText().toString(), etchatClass.getText().toString(),
                         formattedDate, username, etchatFaculty.getText().toString(), users);
 
                 //save values on database
-                databaseReference.child(chatID).setValue(newChatRoom);
-                Toast.makeText(CreateNewChatActivity.this, "Chat Created", Toast.LENGTH_LONG).show();
+                databaseReference.child(chatID).setValue(newChatRoom, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError == null) {
+                            Toast.makeText(CreateNewChatActivity.this, "Chat Created", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(CreateNewChatActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
     }
