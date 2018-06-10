@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="end"
-        android:background="@drawable/sentMessage"
+        android:background="@drawable/sent_message"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp">

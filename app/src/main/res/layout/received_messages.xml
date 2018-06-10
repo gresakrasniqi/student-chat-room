@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="start"
-        android:background="@drawable/receivedMessage"
+        android:background="@drawable/received_message"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="15dp"
         android:layout_marginEnd="10dp"

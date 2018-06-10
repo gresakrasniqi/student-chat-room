@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,26 +34,30 @@ public class SettingsActivity extends Fragment {
         String username = firebaseAuth.getCurrentUser().getDisplayName();
 
         ArrayList<String> alSettings = new ArrayList<String>();
-        alSettings.add(username);
         alSettings.add("Edit profile");
         alSettings.add("About us");
         alSettings.add("Log out");
 
+        // Set the header of the Settings ListView
+        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.row_header, lvSettings, false);
+        TextView txtHeader = (TextView) header.findViewById(R.id.header_username);
+        txtHeader.setText(username);
+        lvSettings.addHeaderView(header, null, false);
+
         ArrayAdapter<String> allItemsAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(),
                 R.layout.list_view_row, alSettings);
+
         lvSettings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        break;
-                    case 1:
                         getActivity().startActivity(new Intent(getContext(), EditProfileActivity.class));
                         break;
-                    case 2:
+                    case 1:
                         getActivity().startActivity(new Intent(getContext(), AboutUsActivity.class));
                         break;
-                    case 3:
+                    case 2:
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
                         alertDialog.setCancelable(true);
                         alertDialog.setMessage("Are you sure you want to log out?");

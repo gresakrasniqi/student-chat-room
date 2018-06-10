@@ -19,6 +19,9 @@ import android.widget.ListView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -92,6 +95,7 @@ public class MainActivity extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
                 alertDialog.setTitle("Enter chat ID");
+                final String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
                 //alertDialog.setMessage("");
                 final EditText input;
                 input = new EditText(getContext());
@@ -99,6 +103,12 @@ public class MainActivity extends Fragment {
                 alertDialog.setPositiveButton("Join", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //Connected firebase
+                        String joinChatID = input.getText().toString();
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats")
+                                .child(joinChatID).child("users");
+                        String id = databaseReference.push().getKey();
+                        databaseReference.child(id).setValue(username);
+
                     }
                 });
                 alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
