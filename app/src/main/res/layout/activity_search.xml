@@ -8,23 +8,24 @@
     android:orientation="vertical"
     android:padding="3dp">
 
-
     <EditText
-        android:id="@+id/etSearchWeb"
+        android:id="@+id/search_web_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:imeOptions="actionNext"
         android:inputType="text"
-        android:layout_marginBottom="20dp"/>
+        android:layout_margin="20dp"
+        android:padding="5dp"
+        android:hint="Google search"/>
 
     <Button
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="Search"
-        android:background="@color/common_google_signin_btn_text_light"
+        android:background="@color/colorAccent"
         android:textAllCaps="false"
         android:layout_gravity="center"
-        android:id="@+id/btnWebSearch"/>
+        android:id="@+id/web_search_button"/>
 
 
 </LinearLayout>

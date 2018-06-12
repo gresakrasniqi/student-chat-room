@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,6 +31,11 @@ import java.util.ArrayList;
 
 public class MainActivity extends Fragment {
 
+    final private ArrayList<String> alChatRooms = new ArrayList<String>();
+    final private ArrayList<ChatRoom> chatRoomInfo = new ArrayList<>();
+    private ArrayAdapter<String> allItemsAdapter;
+    private boolean listViewHasChats = false;
+
     public MainActivity() {
         // Required empty public constructor
     }
@@ -44,23 +49,63 @@ public class MainActivity extends Fragment {
 
         ListView lvChatRoom = (ListView) v.findViewById(R.id.chats_list);
 
-        final ArrayList<String> alChatRooms = new ArrayList<String>();
-
-        final ArrayAdapter<String> allItemsAdapter = new ArrayAdapter<String>(getActivity().getBaseContext(),
+        allItemsAdapter  = new ArrayAdapter<String>(getActivity().getBaseContext(),
                 R.layout.list_view_row, alChatRooms);
         lvChatRoom.setAdapter(allItemsAdapter);
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
+        // If the listView has data, don't update the ListView.
+        if (!listViewHasChats) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot chat: dataSnapshot.getChildren()) {
+                        if (chat.child("users").child(uid).exists()){
+                            Toast.makeText(getContext(), "YES", Toast.LENGTH_LONG).show();
+                            alChatRooms.add(chat.child("chatName").getValue(String.class));
+                            chatRoomInfo.add(chat.getValue(ChatRoom.class));
+                        }
+                    }
+                    allItemsAdapter.notifyDataSetChanged();
+                    if (!alChatRooms.isEmpty()) {
+                        listViewHasChats = true;
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+        lvChatRoom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Send the ChatRoom object to the MessageActivity
+                ChatRoom clickedChatRoom = chatRoomInfo.get(position);
+                Intent i = new Intent(getActivity(), MessageActivity.class);
+                i.putExtra("clickedChatRoom", clickedChatRoom);
+                startActivity(i);
+            }
+        });
+
+        return v;
+    }
+
+    public void addChatToListView(String chatId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats").child(chatId);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot chat: dataSnapshot.getChildren()) {
-                    if (chat.child("users").child(uid).exists()){
-                        Toast.makeText(getContext(), "YES", Toast.LENGTH_LONG).show();
-                        alChatRooms.add(chat.child("chatName").getValue(String.class));
-                    }
-                }
+                Toast.makeText(getContext(), "New user joined", Toast.LENGTH_LONG).show();
+                alChatRooms.add(dataSnapshot.child("chatName").getValue(String.class));
+                chatRoomInfo.add(dataSnapshot.getValue(ChatRoom.class));
+
                 allItemsAdapter.notifyDataSetChanged();
+                if (!alChatRooms.isEmpty()) {
+                    listViewHasChats = true;
+                }
             }
 
             @Override
@@ -68,33 +113,6 @@ public class MainActivity extends Fragment {
 
             }
         });
-//        databaseReference.child("-LEe3KCyYcwNsS89c7Do").addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                alChatRooms.add(dataSnapshot.child("chatName").getValue(String.class));
-//                allItemsAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                //show error
-//            }
-//        });
-
-        lvChatRoom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 0:
-                        break;
-                    case 1:
-                        getActivity().startActivity(new Intent(getContext(), Message_activity.class));
-                        break;
-                }
-            }
-        });
-
-        return v;
     }
 
     @Override
@@ -131,21 +149,36 @@ public class MainActivity extends Fragment {
                 final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 final String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-                //alertDialog.setMessage("");
+                // Create the input for the AlertDialog
                 final EditText input;
                 input = new EditText(getContext());
-                alertDialog.setView(input);
+                input.setSingleLine();
+
+                // Set the container for the input field, and configure the left and right margin
+                FrameLayout container = new FrameLayout(getActivity());
+                FrameLayout.LayoutParams layoutParams = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.leftMargin = 50;
+                layoutParams.rightMargin = 50;
+
+                // Set the layoutParams of the input and add it to the container.
+                input.setLayoutParams(layoutParams);
+                container.addView(input);
+                alertDialog.setView(container);
+
+                // Define what "Join" does.
                 alertDialog.setPositiveButton("Join", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //Connected firebase
-                        String joinChatID = input.getText().toString();
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats")
-                                .child(joinChatID).child("users");
-                        databaseReference.child(uid).setValue(username, new DatabaseReference.CompletionListener() {
+                        final String joinChatID = input.getText().toString();
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats").child(joinChatID);
+                        databaseReference.child("users").child(uid).setValue(username, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 if (databaseError == null) {
-                                    Toast.makeText(getContext(), "You sucessfuly joined the chat", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), "You successfully joined the chat", Toast.LENGTH_LONG).show();
+
+                                    // Add the new joined chat to the ListView.
+                                    addChatToListView(joinChatID);
                                 } else {
                                     Toast.makeText(getContext(), databaseError.getMessage(), Toast.LENGTH_LONG).show();
                                 }
@@ -153,6 +186,8 @@ public class MainActivity extends Fragment {
                         });
                     }
                 });
+
+                // Define what "Cancel" does.
                 alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

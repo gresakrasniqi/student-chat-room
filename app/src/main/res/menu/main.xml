@@ -1,35 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="none">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/googleg_standard_color_18"
-            android:title="Home" />
-        <item
-            android:id="@+id/nav_personal_history"
-            android:icon="@drawable/googleg_standard_color_18"
-            android:title="History" />
-        <item
-            android:id="@+id/nav_history"
-            android:icon="@drawable/googleg_standard_color_18"
-            android:title="All reports" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/googleg_standard_color_18"
-            android:title="Delete recent reports" />
+            android:title="Leave Chat" />
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/googleg_standard_color_18"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_aboutus"
-                android:icon="@drawable/googleg_standard_color_18"
-                android:title="About Us" />
-        </menu>
-    </item>
+    <!--<item android:title="Communicate">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_share"-->
+                <!--android:icon="@drawable/googleg_standard_color_18"-->
+                <!--android:title="Share" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_aboutus"-->
+                <!--android:icon="@drawable/googleg_standard_color_18"-->
+                <!--android:title="About Us" />-->
+        <!--</menu>-->
+    <!--</item>-->
 </menu>

@@ -1,10 +1,11 @@
 package com.example.pramadani.projekti_v21;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class ChatRoom {
+public class ChatRoom implements Serializable {
 
     private String chatID;
     private String chatName;

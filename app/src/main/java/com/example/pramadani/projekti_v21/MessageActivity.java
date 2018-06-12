@@ -3,16 +3,15 @@ package com.example.pramadani.projekti_v21;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Message_activity extends AppCompatActivity {
+public class MessageActivity extends AppCompatActivity {
 
     private ImageButton ibSend;
     private EditText etMessage;
@@ -47,7 +46,20 @@ public class Message_activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_messages_activity);
+        setContentView(R.layout.activity_messages);
+
+        ChatRoom clickedChatRoom;
+
+        // Get the extras from the previous Activity
+        Bundle extras = getIntent().getExtras();
+        clickedChatRoom = (ChatRoom) extras.getSerializable("clickedChatRoom");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.messages_activity_toolbar);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(clickedChatRoom.getChatName());
 
         ibSend=findViewById(R.id.ib_Send);
 
@@ -122,7 +134,7 @@ public class Message_activity extends AppCompatActivity {
                     chatMessageList.add(chatMessage);
 
                 }
-                MessagesAdapter adapter=new MessagesAdapter(Message_activity.this,chatMessageList);
+                MessagesAdapter adapter=new MessagesAdapter(MessageActivity.this,chatMessageList);
                 listViewMessage.setAdapter(adapter);
 
             }
@@ -155,5 +167,27 @@ public class Message_activity extends AppCompatActivity {
             InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        // Leave the chat
+        if (id == R.id.nav_home) {
+            Toast.makeText(getApplicationContext(),"Clicked LEAVE", Toast.LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
