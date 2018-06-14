@@ -23,13 +23,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/action_join_chat"
             app:fab_size="mini"
-            android:src="@drawable/ic_action_chat"/>
+            android:src="@mipmap/ic_join_chat"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/action_new_chat"
             app:fab_size="mini"
-            android:src="@drawable/ic_send"/>
+            android:src="@mipmap/ic_create_chat"/>
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </RelativeLayout>
