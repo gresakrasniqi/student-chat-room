@@ -63,7 +63,11 @@ public class MainActivity extends Fragment {
                         if (chat.child("users").child(uid).exists()){
                             Toast.makeText(getContext(), "YES", Toast.LENGTH_LONG).show();
                             alChatRooms.add(chat.child("chatName").getValue(String.class));
-                            chatRoomInfo.add(chat.getValue(ChatRoom.class));
+
+                            ChatRoom chatInformation = chat.getValue(ChatRoom.class);
+                            chatInformation.setChatID(chat.getKey());
+
+                            chatRoomInfo.add(chatInformation);
                         }
                     }
                     allItemsAdapter.notifyDataSetChanged();
@@ -71,7 +75,6 @@ public class MainActivity extends Fragment {
                         listViewHasChats = true;
                     }
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 

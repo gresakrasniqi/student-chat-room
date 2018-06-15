@@ -3,6 +3,7 @@ package com.example.pramadani.projekti_v21;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -30,7 +32,8 @@ public class MessageActivity extends AppCompatActivity {
     private ImageButton ibSend;
     private EditText etMessage;
     private DatabaseReference databaseMessage;
-    private String senderId,chatId;
+    private String senderUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+    private static String chatId;
     private boolean showSentTime=true;
     private boolean showReceivedTime=true;
 
@@ -67,18 +70,15 @@ public class MessageActivity extends AppCompatActivity {
 
         databaseMessage= FirebaseDatabase.getInstance().getReference("Messages");
 
+        chatId=clickedChatRoom.getChatID();
 
-                    chatId="awokdekokeeko123451111";
+
+
 
          listViewMessage= findViewById(R.id.lvMessage);
 
          chatMessageList=new ArrayList<>();
 
-        etMessage.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-            }
-        });
 
         ibSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,13 +123,13 @@ public class MessageActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
         databaseMessage.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 chatMessageList.clear();
                 for(DataSnapshot messageSnapshot :dataSnapshot.getChildren()){
                     ChatMessage chatMessage=messageSnapshot.getValue(ChatMessage.class);
+                    if(chatMessage.getChatID()!=null)
                     if(chatMessage.getChatID().equals(chatId))
                     chatMessageList.add(chatMessage);
 
@@ -148,11 +148,11 @@ public class MessageActivity extends AppCompatActivity {
 
     private void addMessage() {
         String message =etMessage.getText().toString().trim();
-        senderId = FirebaseAuth.getInstance().getCurrentUser().getDisplayName()+"test";
+        ;
         if(!message.isEmpty()){
             String id = databaseMessage.push().getKey();
 
-            ChatMessage chatMessage=new ChatMessage(message,senderId,chatId);
+            ChatMessage chatMessage=new ChatMessage(message, senderUsername,chatId);
 
             databaseMessage.child(id).setValue(chatMessage);
 
