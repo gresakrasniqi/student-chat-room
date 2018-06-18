@@ -19,16 +19,16 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
-    private Button btnLogin, register;
+    private Button btnLogin, btnRegister;
     private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
-    static String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
 
+        //If user is logged in, go to MainSwipeActivity
         firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(LoginActivity.this, MainSwipeActivity.class));
@@ -38,9 +38,10 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.email);
         etPassword = findViewById(R.id.password);
         btnLogin = findViewById(R.id.btn_login);
-        register = findViewById(R.id.btn_signup);
-        progressBar = findViewById(R.id.indeterminateBar);
+        btnRegister = findViewById(R.id.btn_signup);
+        progressBar = findViewById(R.id.progress_bar);
 
+        //Check if inputs are not empty, and try to login
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,16 +58,18 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-        register.setOnClickListener(new View.OnClickListener() {
+
+        // Show the RegisterActivity.
+        btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Show the RegisterActivity.
                 Intent register = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(register);
             }
         });
     }
 
+    // Use firebaseAuth to sign in
     private void logInUsers(String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override

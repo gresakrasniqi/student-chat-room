@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 public class EditProfileActivity extends AppCompatActivity {
 
     private EditText etEditName, etEditFaculty, etEditEmail;
-    private TextView username;
+    private TextView tvUsername;
     private Button btnUpdate;
     private Button btnCancel;
     private FirebaseAuth firebaseAuth;
@@ -43,10 +43,11 @@ public class EditProfileActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle("Edit profile");
 
-        username = findViewById(R.id.username);
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        username.setText(currentUser.getDisplayName());
+
+        tvUsername = findViewById(R.id.username);
+        tvUsername.setText(currentUser.getDisplayName());
 
         etEditName = findViewById(R.id.etEditName);
         etEditFaculty = findViewById(R.id.etEditFaculty);
@@ -54,6 +55,7 @@ public class EditProfileActivity extends AppCompatActivity {
         btnUpdate = findViewById(R.id.btnUpdate);
         btnCancel = findViewById(R.id.btnCancel);
 
+        //user data for currentUser, use them to save data from database
         final String userID = currentUser.getUid();
         final User user = new User();
 
@@ -71,29 +73,35 @@ public class EditProfileActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //show error
+                Toast.makeText(EditProfileActivity.this,"Error "+ databaseError, Toast.LENGTH_LONG).show();
             }
         });
 
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!etEditName.getText().toString().equals(user.getName())){
-                    user.setName(etEditName.getText().toString());
+                String name = etEditName.getText().toString().trim();
+                String faculty = etEditFaculty.getText().toString().trim();
+                String email =etEditEmail.getText().toString().trim();
+
+                // Check if the user has edited the inputs.
+                if(!name.isEmpty() && !name.equals(user.getName())){
+                    user.setName(name);
                 }
-                if(!etEditFaculty.getText().toString().equals(user.getFaculty())){
-                    user.setFaculty(etEditFaculty.getText().toString());
+                if(!faculty.isEmpty() && !faculty.equals(user.getFaculty())){
+                    user.setFaculty(faculty);
                 }
-                if(!etEditEmail.getText().toString().equals(user.getName())){
-                    user.setEmail(etEditEmail.getText().toString());
+                if(!email.isEmpty() && !email.equals(user.getName())){
+                    user.setEmail(email);
                 }
+                //Update data on FirebaseDatabase
                 databaseReference.child(userID).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             //success adding user to db as well
                             //go to users chat list
-                            Toast.makeText(EditProfileActivity.this,"Success", Toast.LENGTH_LONG).show();
+                            Toast.makeText(EditProfileActivity.this,"Success", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(EditProfileActivity.this, "Error " + task.getException(), Toast.LENGTH_SHORT).show();
                         }

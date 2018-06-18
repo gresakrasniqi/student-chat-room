@@ -1,5 +1,7 @@
 package com.example.pramadani.projekti_v21;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +11,8 @@ import android.widget.EditText;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -51,7 +55,7 @@ public class CreateNewChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
-                String chatID = databaseReference.push().getKey();
+                final String chatID = databaseReference.push().getKey();
 
                 //format the data
                 SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -59,21 +63,33 @@ public class CreateNewChatActivity extends AppCompatActivity {
                 String formattedDate = formatter.format(currentDate);
                 HashMap<String, String>  users = new HashMap<String, String>();
                 users.put(uid, username);
-                ChatRoom newChatRoom = new ChatRoom(etchatName.getText().toString(), etchatClass.getText().toString(),
+                final ChatRoom newChatRoom = new ChatRoom(etchatName.getText().toString(), etchatClass.getText().toString(),
                         formattedDate, username, etchatFaculty.getText().toString(), users);
 
                 //save values on database
-                databaseReference.child(chatID).setValue(newChatRoom, new DatabaseReference.CompletionListener() {
+                databaseReference.child(chatID).setValue(newChatRoom).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if (databaseError == null) {
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
                             Toast.makeText(CreateNewChatActivity.this, "Chat Created", Toast.LENGTH_LONG).show();
+
+                            newChatRoom.setChatID(chatID);
+
+                            Intent intent = new Intent();
+                            intent.putExtra("AddedChatRoom", newChatRoom);
+                            setResult(1, intent);
+                            finish();
                         } else {
-                            Toast.makeText(CreateNewChatActivity.this, databaseError.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(CreateNewChatActivity.this, "Error "+task.getException(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
             }
         });
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

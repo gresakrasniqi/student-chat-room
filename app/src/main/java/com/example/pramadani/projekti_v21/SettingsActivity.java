@@ -28,9 +28,7 @@ public class SettingsActivity extends Fragment {
         View v = inflater.inflate(R.layout.activity_settings, container, false);
 
         ListView lvSettings = (ListView)v.findViewById(R.id.settings_list);
-
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-
         String username = firebaseAuth.getCurrentUser().getDisplayName();
 
         ArrayList<String> alSettings = new ArrayList<String>();

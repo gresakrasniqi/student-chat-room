@@ -52,13 +52,13 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = etName.getText().toString();
-                String faculty = etFaculty.getText().toString();
-                String username = etUsername.getText().toString();
-                String email = etEmail.getText().toString();
-                String password = etPassword.getText().toString();
-                String rePassword = etRetypePassword.getText().toString();
-                if (name.equals("") || faculty.equals("") || username.equals("") || email.equals("") || password.equals("") || rePassword.equals("")) {
+                String name = etName.getText().toString().trim();
+                String faculty = etFaculty.getText().toString().trim();
+                String username = etUsername.getText().toString().trim();
+                String email = etEmail.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+                String rePassword = etRetypePassword.getText().toString().trim();
+                if (name.isEmpty()|| faculty.isEmpty() || username.isEmpty() || email.isEmpty() || password.isEmpty() || rePassword.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Fill all the fields!", Toast.LENGTH_SHORT).show();
                 } else {
                     if (password.equals(rePassword)) {
@@ -73,19 +73,24 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    // Use firebaseAuth to create new use
     private void signUpUserWithFirebase(final User userData, String password) {
         firebaseAuth = FirebaseAuth.getInstance();
+        //Use firebaseAuth to create user with email and password and add OnCompleteListener
         firebaseAuth.createUserWithEmailAndPassword(userData.getEmail(), password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    //Get the created user
                     final FirebaseUser newUser = task.getResult().getUser();
-                    updateUserInDb(newUser.getUid(), userData);
+
+                    // Set the userName as the displayName in farebaseAuth
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(userData.getUsername()).build();
                     newUser.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+                                //Set the other user data
                                 updateUserInDb(newUser.getUid(), userData);
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Error " + task.getException(), Toast.LENGTH_SHORT).show();
@@ -99,15 +104,16 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUserInDb(String userId, User user){
+    //Insert the other user data in FirebaseDatabase
+    private void updateUserInDb(String userId, User userData){
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-        databaseReference.child(userId).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+        databaseReference.child(userId).setValue(userData).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     //success adding user to db as well
                     //go to users chat list
-                    goToMainActivity();
+                    loginAndGoToMainActivity(etEmail.getText().toString(), etPassword.getText().toString());
                 } else {
                     Toast.makeText(RegisterActivity.this, "Error " + task.getException(), Toast.LENGTH_SHORT).show();
                 }
@@ -115,11 +121,22 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void goToMainActivity(){
-        startActivity(new Intent(this, MainSwipeActivity.class));
-        finish();
+    //Login and go to main activity
+    private void loginAndGoToMainActivity(String email, String password){
+        firebaseAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    startActivity(new Intent(RegisterActivity.this, MainSwipeActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Error " + task.getException(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
+    //Finish activity if back button is clicked
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

@@ -1,5 +1,12 @@
 package com.example.pramadani.projekti_v21;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +23,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,13 +43,13 @@ public class MessageActivity extends AppCompatActivity {
     private DatabaseReference databaseMessage;
     private String senderUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
     private static String chatId;
-    private boolean showSentTime=true;
-    private boolean showReceivedTime=true;
-
+    private boolean showSentTime = true;
+    private boolean showReceivedTime = true;
 
     private TextView sentTimeShow;
     private TextView sent_user;
     private TextView receivedTimeShow;
+    private ChatRoom clickedChatRoom;
 
     ListView listViewMessage;
 
@@ -50,8 +59,6 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
-
-        ChatRoom clickedChatRoom;
 
         // Get the extras from the previous Activity
         Bundle extras = getIntent().getExtras();
@@ -64,20 +71,17 @@ public class MessageActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(clickedChatRoom.getChatName());
 
-        ibSend=findViewById(R.id.ib_Send);
+        ibSend = findViewById(R.id.ib_Send);
 
-        etMessage=findViewById(R.id.etMessage);
+        etMessage = findViewById(R.id.etMessage);
 
-        databaseMessage= FirebaseDatabase.getInstance().getReference("Messages");
+        databaseMessage = FirebaseDatabase.getInstance().getReference("Messages");
 
-        chatId=clickedChatRoom.getChatID();
+        chatId = clickedChatRoom.getChatID();
 
+        listViewMessage = findViewById(R.id.lvMessage);
 
-
-
-         listViewMessage= findViewById(R.id.lvMessage);
-
-         chatMessageList=new ArrayList<>();
+        chatMessageList = new ArrayList<>();
 
 
         ibSend.setOnClickListener(new View.OnClickListener() {
@@ -92,31 +96,27 @@ public class MessageActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 receivedTimeShow = view.findViewById(R.id.received_time);
                 sentTimeShow = view.findViewById(R.id.sent_time);
-                sent_user=view.findViewById(R.id.sent_user);
-                if(sent_user!=null){
+                sent_user = view.findViewById(R.id.sent_user);
+                if (sent_user != null) {
 
-                if(showSentTime){
-                    sentTimeShow.setVisibility(View.VISIBLE);
-                    showSentTime=false;
-                }
-                else {
-                    sentTimeShow.setVisibility(View.GONE);
-                    showSentTime=true;
-                }
-                }
-                else{
-                    if(showReceivedTime){
-                        receivedTimeShow.setVisibility(View.VISIBLE);
-                        showReceivedTime=false;
+                    if (showSentTime) {
+                        sentTimeShow.setVisibility(View.VISIBLE);
+                        showSentTime = false;
+                    } else {
+                        sentTimeShow.setVisibility(View.GONE);
+                        showSentTime = true;
                     }
-                    else {
+                } else {
+                    if (showReceivedTime) {
+                        receivedTimeShow.setVisibility(View.VISIBLE);
+                        showReceivedTime = false;
+                    } else {
                         receivedTimeShow.setVisibility(View.GONE);
-                        showReceivedTime=true;
+                        showReceivedTime = true;
                     }
                 }
             }
         });
-
     }
 
     @Override
@@ -127,14 +127,13 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 chatMessageList.clear();
-                for(DataSnapshot messageSnapshot :dataSnapshot.getChildren()){
-                    ChatMessage chatMessage=messageSnapshot.getValue(ChatMessage.class);
-                    if(chatMessage.getChatID()!=null)
-                    if(chatMessage.getChatID().equals(chatId))
-                    chatMessageList.add(chatMessage);
-
+                for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                    ChatMessage chatMessage = messageSnapshot.getValue(ChatMessage.class);
+                    if (chatMessage.getChatID() != null)
+                        if (chatMessage.getChatID().equals(chatId))
+                            chatMessageList.add(chatMessage);
                 }
-                MessagesAdapter adapter=new MessagesAdapter(MessageActivity.this,chatMessageList);
+                MessagesAdapter adapter = new MessagesAdapter(MessageActivity.this, chatMessageList);
                 listViewMessage.setAdapter(adapter);
 
             }
@@ -147,32 +146,17 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private void addMessage() {
-        String message =etMessage.getText().toString().trim();
-        ;
-        if(!message.isEmpty()){
+        String message = etMessage.getText().toString().trim();
+
+        if (!message.isEmpty()) {
             String id = databaseMessage.push().getKey();
 
-            ChatMessage chatMessage=new ChatMessage(message, senderUsername,chatId);
+            ChatMessage chatMessage = new ChatMessage(message, senderUsername, chatId);
 
             databaseMessage.child(id).setValue(chatMessage);
 
             etMessage.setText("");
-
-//            Toast.makeText(this,"Message Added",Toast.LENGTH_SHORT).show();
         }
-
-    }
-    public void hideSoftKeyboard() {
-        if(getCurrentFocus()!=null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        }
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -184,10 +168,55 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        // Leave the chat
-        if (id == R.id.nav_home) {
-            Toast.makeText(getApplicationContext(),"Clicked LEAVE", Toast.LENGTH_LONG).show();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                return true;
+            // Leave the chat
+            case R.id.leave_chat:
+                Toast.makeText(getApplicationContext(), "Clicked LEAVE", Toast.LENGTH_LONG).show();
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MessageActivity.this);
+                alertDialog.setCancelable(true);
+                alertDialog.setMessage("Are you sure you want to leave chat?");
+                alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Chats");
+                        databaseReference.child(chatId).child("users").child(userId).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(getApplicationContext(), "You left the chat", Toast.LENGTH_LONG).show();
+
+                                    Intent intent = new Intent();
+                                    intent.putExtra("DeletedChatRoom", clickedChatRoom);
+                                    setResult(2, intent);
+                                    MessageActivity.this.finish();
+                                }
+                            }
+                        });
+                    }
+                });
+                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
+                return true;
+
+            case R.id.copy_chatID:
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Copied Data", clickedChatRoom.getChatID());
+                clipboardManager.setPrimaryClip(clip);
+
+                Toast.makeText(getApplicationContext(), "Copied ChatID", Toast.LENGTH_LONG).show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 }

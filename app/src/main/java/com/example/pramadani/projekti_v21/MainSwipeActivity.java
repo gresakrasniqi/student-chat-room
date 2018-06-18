@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainSwipeActivity extends AppCompatActivity {
-    //private Toolbar toolbar;
+
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
@@ -20,15 +20,11 @@ public class MainSwipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_swipe);
 
-        /** Uncomment this to show the toolbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        */
+        //Create viewPager that shows all the fragmentActivities
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
+        //Set up the tabLayout that shows all the icons of the fragments
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -75,7 +71,7 @@ public class MainSwipeActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return null;
+            return mFragmentTitleList.get(position);
         }
     }
 }

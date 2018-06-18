@@ -3,8 +3,14 @@
 
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/leave_chat"
             android:title="Leave Chat" />
+        <item
+            android:id="@+id/copy_chatID"
+            android:title="Copy ChatID"/>
+        <item
+            android:id="@+id/members"
+            android:title="Members"/>
     </group>
 
     <!--<item android:title="Communicate">-->
