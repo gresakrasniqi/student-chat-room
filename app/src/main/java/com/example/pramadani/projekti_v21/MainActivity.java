@@ -123,7 +123,7 @@ public class MainActivity extends Fragment {
                 alertDialog.setPositiveButton("Join", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         //Get input text
-                        final String joinChatID = input.getText().toString().trim();
+                        final String joinChatID = input.getText().toString();
                         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats").child(joinChatID);
                         databaseReference.child("users").child(uid).setValue(username).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -229,7 +229,7 @@ public class MainActivity extends Fragment {
             if (data != null){
                 ChatRoom deletedChatRoom = (ChatRoom) data.getSerializableExtra("DeletedChatRoom");
 
-                for (int i = 0; i <= alChatRoomInfo.size(); i++) {
+                for (int i = 0; i < alChatRoomInfo.size(); i++) {
                     if (alChatRoomInfo.get(i).getChatID().equals(deletedChatRoom.getChatID())) {
                         alChatRoomInfo.remove(i);
                     }

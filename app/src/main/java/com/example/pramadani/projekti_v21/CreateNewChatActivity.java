@@ -58,8 +58,8 @@ public class CreateNewChatActivity extends AppCompatActivity {
                 final String chatID = databaseReference.push().getKey();
 
                 //format the data
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                 Date currentDate = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                 String formattedDate = formatter.format(currentDate);
                 HashMap<String, String>  users = new HashMap<String, String>();
                 users.put(uid, username);

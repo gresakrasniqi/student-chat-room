@@ -1,9 +1,5 @@
 <resources>
     <string name="app_name">StuTalk</string>
     <string name="title_activity_settings">Settings</string>
-
     <string name="about_us"><b>StuTalk</b> - v1.0 \n\nThis application was made by three students: Gresa Krasniqi, Premtim Ramadani and Urtina Deskaj as part of their project in "Programming in mobile devices".\n\n© Gresa Krasniqi\ngtkrasniqi@gmail.com \n\n© Premtim Ramadani\npremtimr@outlook.com  \n\n© Urtina Deskaj\nurtinadeskaj@gmail.com "</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

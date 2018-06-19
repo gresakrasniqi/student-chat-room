@@ -62,7 +62,7 @@
             android:textColor="@android:color/black" >
         </Button>
 
-        <Button
+       <!-- <Button
             android:id="@+id/btn_reset_password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             android:background="@null"
             android:text="Reset Password"
             android:textAllCaps="false"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/colorAccent" />-->
 
 
         <!-- Link to Login Screen -->

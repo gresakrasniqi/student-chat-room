@@ -76,7 +76,7 @@ public class SettingsActivity extends Fragment {
             }
         });
 
-        // this will be called when there is change in firebase user session
+        // this will be called when there is change in firebase user session, call when we signOut from firebase.
         firebaseAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {

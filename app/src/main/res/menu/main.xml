@@ -8,21 +8,5 @@
         <item
             android:id="@+id/copy_chatID"
             android:title="Copy ChatID"/>
-        <item
-            android:id="@+id/members"
-            android:title="Members"/>
     </group>
-
-    <!--<item android:title="Communicate">-->
-        <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_share"-->
-                <!--android:icon="@drawable/googleg_standard_color_18"-->
-                <!--android:title="Share" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_aboutus"-->
-                <!--android:icon="@drawable/googleg_standard_color_18"-->
-                <!--android:title="About Us" />-->
-        <!--</menu>-->
-    <!--</item>-->
 </menu>
